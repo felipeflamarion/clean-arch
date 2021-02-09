@@ -11,7 +11,7 @@ class Ticket:
     labels: List[str] = None
     creation_date: DateTime = None
 
-    def to_dict(self):
+    def to_json(self):
         return {
             "id": self.id,
             "title": self.title,

@@ -11,7 +11,10 @@ class TicketListAPI(APIBase):
         return {"GET": self.get, "POST": self.create}
 
     def get(self, *args, **kwargs):
-        return self.use_cases.get_tickets()
+        resp = self.use_cases.get_tickets()
+        return {
+            "tickets": [item.to_json() for item in resp.items] if resp.items else []
+        }
 
     def create(self, *args, **kwargs):
         return self.use_cases.create_ticket(data=request.json)

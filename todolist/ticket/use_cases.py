@@ -14,7 +14,7 @@ class TicketUseCases:
         return {}
 
     def get_tickets(self):
-        return {"tickets": []}
+        return self.repo.get_tickets()
 
     def delete_ticket(self, id: int):
         return {}
