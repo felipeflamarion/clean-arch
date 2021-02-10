@@ -1,6 +1,7 @@
 from core.response import ItemResp, ItemsResp
 from pendulum import DateTime
 from todolist.entities import Ticket
+from todolist.models import SQLTicket
 from todolist.ticket.interfaces import ITicketRepo
 
 
@@ -29,3 +30,11 @@ class SQLTicketRepo(ITicketRepo):
 
     def delete_ticket(self, id: int) -> ItemResp:
         raise NotImplementedError
+
+
+def ticket_to_db(ticket: Ticket) -> SQLTicket:
+    return
+
+
+def db_to_ticket(sql_ticket: SQLTicket) -> Ticket:
+    return
