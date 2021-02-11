@@ -1,13 +1,33 @@
+import pendulum as datetime
+from core.response import HttpStatus, ItemResp
+from todolist.entities import Ticket
+
+
 class TicketUseCases:
     def __init__(self, repo):
         self.repo = repo
 
     def create_ticket(self, data: dict):
-        ticket = data  # TODO: call bussiness rules validation
-        return self.repo.create_ticket(ticket)
+        ticket = Ticket(
+            title=data.get("title"),
+            description=data.get("description"),
+            labels=data.get("labels"),
+            creation_date=datetime.now(),
+        )
+        return self.repo.insert_ticket(ticket)
 
     def update_ticket(self, id: int, data: dict):
-        ticket = {**data, "id": id}
+        resp = self.get_ticket(id=id)
+        if not resp.item:
+            return resp
+
+        ticket = Ticket(
+            id=id,
+            title=data.get("title"),
+            description=data.get("description"),
+            labels=data.get("labels"),
+            creation_date=resp.item.creation_date,
+        )
         return self.repo.update_ticket(ticket)
 
     def get_ticket(self, id: int):

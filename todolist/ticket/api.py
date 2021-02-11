@@ -12,12 +12,15 @@ class TicketListAPI(APIBase):
 
     def get(self, *args, **kwargs):
         resp = self.use_cases.get_tickets()
+
         return {
             "tickets": [item.to_json() for item in resp.items] if resp.items else []
         }
 
     def create(self, *args, **kwargs):
-        return self.use_cases.create_ticket(data=request.json)
+        resp = self.use_cases.create_ticket(data=request.json)
+
+        return resp.item.to_json() if resp.item else {}
 
 
 class TicketSingleAPI(APIBase):
@@ -26,13 +29,22 @@ class TicketSingleAPI(APIBase):
         super().__init__(*args, **kwargs)
 
     def set_methods(self):
-        return {"GET": self.get_by_id, "PUT": self.update}
+        return {"GET": self.get_by_id, "PUT": self.update, "DELETE": self.delete}
 
     def get_by_id(self, id: int):
-        return self.use_cases.get_ticket(id=id)
+        resp = self.use_cases.get_ticket(id=id)
+
+        return resp.item.to_json() if resp.item else {}
 
     def update(self, id: int):
-        return self.use_cases.update_ticket(id=id, data=request.json)
+        resp = self.use_cases.update_ticket(id=id, data=request.json)
+
+        return resp.item.to_json() if resp.item else {}
+
+    def delete(self, id: int):
+        self.use_cases.delete_ticket(id=id)
+
+        return {}
 
 
 def register_routes(app, use_cases):
