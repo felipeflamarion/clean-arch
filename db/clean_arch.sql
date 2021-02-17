@@ -6,7 +6,7 @@ CREATE TABLE todolist_boards (
     title VARCHAR(128) NOT NULL,
     creation_date TIMESTAMP NOT NULL,
     CONSTRAINT pk_todolist_boards PRIMARY KEY (id)
-)
+);
 
 CREATE TABLE todolist_tickets (
     id SERIAL,
