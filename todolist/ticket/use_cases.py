@@ -9,6 +9,7 @@ class TicketUseCases:
 
     def create_ticket(self, data: dict):
         ticket = Ticket(
+            board_id=data.get("board_id"),
             title=data.get("title"),
             description=data.get("description"),
             labels=data.get("labels"),

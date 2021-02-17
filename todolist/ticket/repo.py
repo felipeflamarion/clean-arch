@@ -19,6 +19,7 @@ class SQLTicketRepo(ITicketRepo):
             self.session.add(sql_ticket)
             self.session.commit()
         except IntegrityError:
+            print("hello world")
             return ItemResp(status=HttpStatus.CONFLICT, errors=[])
 
         ticket = db_to_ticket(sql_ticket)
@@ -69,6 +70,7 @@ class SQLTicketRepo(ITicketRepo):
 def ticket_to_db(ticket: Ticket) -> SQLTicket:
     return SQLTicket(
         id=ticket.id,
+        board_id=ticket.board_id,
         title=ticket.title,
         description=ticket.description,
         labels=dumps(ticket.labels),
@@ -79,6 +81,7 @@ def ticket_to_db(ticket: Ticket) -> SQLTicket:
 def db_to_ticket(sql_ticket: SQLTicket) -> Ticket:
     return Ticket(
         id=sql_ticket.id,
+        board_id=sql_ticket.board_id,
         title=sql_ticket.title,
         description=sql_ticket.description,
         labels=loads(sql_ticket.labels) if sql_ticket.labels else [],
