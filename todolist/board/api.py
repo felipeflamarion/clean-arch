@@ -1,5 +1,6 @@
 from core.bases.api import APIBase
 from flask import request
+from todolist.board.requests import CreateBoard, DeleteBoard, GetBoard, UpdateBoard
 
 
 class BoardListAPI(APIBase):
@@ -13,12 +14,14 @@ class BoardListAPI(APIBase):
     def get(self, *args, **kwargs):
         resp = self.use_cases.get_boards()
 
-        return {"boards": [item.to_json() for item in resp.items] if resp.items else []}
+        return {
+            "boards": [item.to_json() for item in resp.items] if resp.items else []
+        }, resp.status
 
     def create(self, *args, **kwargs):
-        resp = self.use_cases.create_board(data=request.json)
+        resp = self.use_cases.create_board(CreateBoard(title=request.json.get("title")))
 
-        return resp.item.to_json() if resp.item else {}
+        return resp.item.to_json() if resp.item else {}, resp.status
 
 
 class BoardSingleAPI(APIBase):
@@ -30,19 +33,21 @@ class BoardSingleAPI(APIBase):
         return {"GET": self.get_by_id, "PUT": self.update, "DELETE": self.delete}
 
     def get_by_id(self, id: int):
-        resp = self.use_cases.get_board(id=id)
+        resp = self.use_cases.get_board(req=GetBoard(id=id))
 
-        return resp.item.to_json() if resp.item else {}
+        return resp.item.to_json() if resp.item else {}, resp.status
 
     def update(self, id: int):
-        resp = self.use_cases.update_board(id=id, data=request.json)
+        resp = self.use_cases.update_board(
+            req=UpdateBoard(id=id, title=request.json.get("title"))
+        )
 
-        return resp.item.to_json() if resp.item else {}
+        return resp.item.to_json() if resp.item else {}, resp.status
 
     def delete(self, id: int):
-        self.use_cases.delete_board(id=id)
+        resp = self.use_cases.delete_board(req=DeleteBoard(id=id))
 
-        return {}
+        return {}, resp.status
 
 
 def register_routes(app, use_cases):
