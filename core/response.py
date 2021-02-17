@@ -8,16 +8,34 @@ class HttpStatus:
     CONFLICT = 409
 
 
+class ErrorType:
+    REQUIRED = "required"
+    INVALID = "invalid"
+    CONFLICT = "conflict"
+
+
+class FieldError:
+    def __init__(self, field: str, type: str, message: str):
+        self.field = field
+        self.type = type
+        self.message = message
+
+    def to_json(self):
+        return {"field": self.field, "type": self.type, "message": self.message}
+
+
 class Resp:
-    def __init__(self, status: int = None, errors: List[dict] = None):
+    def __init__(self, status: int = None, errors: List[FieldError] = None):
         self.status = status
-        # TODO: Melhorar error resp
         self.errors = errors
 
     @property
     def is_ok(self):
-        # TODO: implement
-        pass
+        return (
+            True
+            if self.status == HttpStatus.OK or (self.status is None and not self.errors)
+            else False
+        )
 
 
 class ItemResp(Resp):
