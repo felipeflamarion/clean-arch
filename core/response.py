@@ -37,6 +37,13 @@ class Resp:
             else False
         )
 
+    def dump_errors(self):
+        return {
+            "errors": [field_error.to_json() for field_error in self.errors]
+            if self.errors
+            else []
+        }
+
 
 class ItemResp(Resp):
     def __init__(self, item: Any = None, *args, **kwargs):
