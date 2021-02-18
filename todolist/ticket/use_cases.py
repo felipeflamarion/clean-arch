@@ -1,6 +1,8 @@
 import pendulum as datetime
 from core.response import HttpStatus, ItemResp
+from core.validations import handle_validations
 from todolist.entities import Ticket
+from todolist.ticket import bussiness
 
 
 class TicketUseCases:
@@ -8,6 +10,17 @@ class TicketUseCases:
         self.repo = repo
 
     def create_ticket(self, data: dict):
+        resp = handle_validations(
+            [
+                bussiness.validate_board_id(None),
+                bussiness.validate_title(None),
+                bussiness.validate_description(None),
+                bussiness.validate_labels(None),
+            ]
+        )
+        if resp.is_ok:
+            return resp
+
         ticket = Ticket(
             board_id=data.get("board_id"),
             title=data.get("title"),
@@ -21,13 +34,25 @@ class TicketUseCases:
         resp = self.get_ticket(id=id)
         if not resp.item:
             return resp
+        ticket = resp.item
+
+        resp = handle_validations(
+            [
+                bussiness.validate_board_id(None),
+                bussiness.validate_title(None),
+                bussiness.validate_description(None),
+                bussiness.validate_labels(None),
+            ]
+        )
+        if resp.is_ok:
+            return resp
 
         ticket = Ticket(
             id=id,
             title=data.get("title"),
             description=data.get("description"),
             labels=data.get("labels"),
-            creation_date=resp.item.creation_date,
+            creation_date=ticket.creation_date,
         )
         return self.repo.update_ticket(ticket)
 

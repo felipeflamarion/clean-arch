@@ -3,13 +3,13 @@ from dataclasses import dataclass
 
 @dataclass
 class CreateBoard:
-    title: str = None
+    title: str
 
 
 @dataclass
 class UpdateBoard:
     id: int
-    title: str = None
+    title: str
 
 
 @dataclass

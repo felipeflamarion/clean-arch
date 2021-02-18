@@ -15,13 +15,15 @@ class BoardListAPI(APIBase):
         resp = self.use_cases.get_boards()
 
         return {
-            "boards": [item.to_json() for item in resp.items] if resp.items else []
+            "boards": [item.to_json() for item in resp.items]
+            if resp.is_ok
+            else resp.dump_errors()
         }, resp.status
 
     def create(self, *args, **kwargs):
         resp = self.use_cases.create_board(CreateBoard(title=request.json.get("title")))
 
-        return resp.item.to_json() if resp.item else {}, resp.status
+        return resp.item.to_json() if resp.is_ok else resp.dump_errors(), resp.status
 
 
 class BoardSingleAPI(APIBase):
@@ -35,19 +37,19 @@ class BoardSingleAPI(APIBase):
     def get_by_id(self, id: int):
         resp = self.use_cases.get_board(req=GetBoard(id=id))
 
-        return resp.item.to_json() if resp.item else {}, resp.status
+        return resp.item.to_json() if resp.is_ok else resp.dump_errors(), resp.status
 
     def update(self, id: int):
         resp = self.use_cases.update_board(
             req=UpdateBoard(id=id, title=request.json.get("title"))
         )
 
-        return resp.item.to_json() if resp.item else {}, resp.status
+        return resp.item.to_json() if resp.is_ok else resp.dump_errors(), resp.status
 
     def delete(self, id: int):
         resp = self.use_cases.delete_board(req=DeleteBoard(id=id))
 
-        return {}, resp.status
+        return {} if resp.is_ok else resp.dump_errors(), resp.status
 
 
 def register_routes(app, use_cases):
