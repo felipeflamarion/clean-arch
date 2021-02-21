@@ -19,7 +19,6 @@ class SQLTicketRepo(ITicketRepo):
             self.session.add(sql_ticket)
             self.session.commit()
         except IntegrityError:
-            print("hello world")
             return ItemResp(status=HttpStatus.CONFLICT, errors=[])
 
         ticket = db_to_ticket(sql_ticket)

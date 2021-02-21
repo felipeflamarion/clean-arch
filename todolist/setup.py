@@ -12,5 +12,5 @@ def setup(app: object, session):
     register_board_routes(app, board_use_cases)
 
     sql_ticket_repo = SQLTicketRepo(session)
-    ticket_use_cases = TicketUseCases(sql_ticket_repo)
+    ticket_use_cases = TicketUseCases(sql_ticket_repo, boards_uc=board_use_cases)
     register_ticket_routes(app, ticket_use_cases)
