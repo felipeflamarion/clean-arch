@@ -4,7 +4,17 @@ from core.response import FieldError, HttpStatus, ItemResp
 
 
 def handle_validations(validations_resp: List[FieldError]) -> ItemResp:
-    errors = list(filter(lambda resp: resp is not None, validations_resp))
+    errors = []
+
+    for resp in validations_resp:
+        if resp is None:
+            continue
+
+        if isinstance(resp, FieldError):
+            errors.append(resp)
+
+        if isinstance(resp, list):
+            errors.extend(resp)
 
     return (
         ItemResp(status=HttpStatus.OK)
