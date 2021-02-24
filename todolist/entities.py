@@ -7,10 +7,16 @@ from pendulum import DateTime
 class Board:
     id: int = None
     title: str = None
-    creation_date: DateTime = None
+    created_at: DateTime = None
+    updated_at: DateTime = None
 
     def to_json(self):
-        return {"id": self.id, "title": self.title, "creation_date": self.creation_date}
+        return {
+            "id": self.id,
+            "title": self.title,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }
 
 
 @dataclass

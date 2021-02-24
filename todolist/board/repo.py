@@ -29,9 +29,7 @@ class SQLBoardRepo(IBoardRepo):
 
         try:
             self.session.query(SQLBoard).filter_by(id=board.id).update(
-                {
-                    "title": db_board.title,
-                }
+                {"title": db_board.title, "updated_at": db_board.updated_at}
             )
             self.session.commit()
         except IntegrityError:
@@ -68,7 +66,8 @@ def board_to_db(board: Board) -> SQLBoard:
     return SQLBoard(
         id=board.id,
         title=board.title,
-        creation_date=board.creation_date,
+        created_at=board.created_at,
+        updated_at=board.updated_at,
     )
 
 
@@ -76,5 +75,6 @@ def db_to_board(sql_board: SQLBoard) -> Board:
     return Board(
         id=sql_board.id,
         title=sql_board.title,
-        creation_date=sql_board.creation_date,
+        created_at=sql_board.created_at,
+        updated_at=sql_board.updated_at,
     )

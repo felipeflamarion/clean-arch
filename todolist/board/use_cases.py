@@ -1,9 +1,9 @@
 import pendulum as datetime
 from core.response import HttpStatus, ItemResp
 from core.validations import handle_validations
-from todolist.board.bussiness import validate_title
 from todolist.board.interfaces import IBoardRepo, IBoardUseCases
 from todolist.board.requests import CreateBoard, DeleteBoard, GetBoard, UpdateBoard
+from todolist.board.validations import validate_title
 from todolist.entities import Board
 
 
@@ -16,9 +16,12 @@ class BoardUseCases(IBoardUseCases):
         if not resp.is_ok:
             return resp
 
+        created_at = datetime.now()
+
         board = Board(
             title=req.title,
-            creation_date=datetime.now(),
+            created_at=created_at,
+            updated_at=created_at,
         )
         return self.repo.insert_board(board)
 
@@ -32,10 +35,13 @@ class BoardUseCases(IBoardUseCases):
         if not resp.is_ok:
             return resp
 
+        updated_at = datetime.now()
+
         board = Board(
             id=req.id,
             title=req.title,
-            creation_date=board.creation_date,
+            created_at=board.created_at,
+            updated_at=updated_at,
         )
         return self.repo.update_board(board)
 
