@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS todolist_tickets;
 DROP TABLE IF EXISTS todolist_persons;
 DROP TABLE IF EXISTS todolist_board_columns;
@@ -17,7 +18,7 @@ CREATE TABLE todolist_board_columns (
     name VARCHAR(32) NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
-    CONSTRAINT pk_todolist_boards PRIMARY KEY (id),
+    CONSTRAINT pk_todolist_board_columns PRIMARY KEY (id),
     CONSTRAINT fk_todolist_board_columsn_todolist_boards FOREIGN KEY (board_id) REFERENCES todolist_boards(id)
 );
 
