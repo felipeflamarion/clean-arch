@@ -3,10 +3,10 @@ from typing import List
 from core.response import FieldError, HttpStatus, ItemResp
 
 
-def handle_validations(validations_resp: List[FieldError]) -> ItemResp:
+def make_errors_from_validations_resp(validations: List[FieldError]):
     errors = []
 
-    for resp in validations_resp:
+    for resp in validations:
         if resp is None:
             continue
 
@@ -15,6 +15,21 @@ def handle_validations(validations_resp: List[FieldError]) -> ItemResp:
 
         if isinstance(resp, list):
             errors.extend(resp)
+
+    return errors
+
+
+def handle_validations(
+    fields_validations: List[FieldError] = [],
+    bussiness_validations: List[FieldError] = [],
+) -> ItemResp:
+    errors = []
+
+    if fields_validations:
+        errors.extend(make_errors_from_validations_resp(fields_validations))
+
+    if not errors and bussiness_validations:
+        errors.extend(make_errors_from_validations_resp(bussiness_validations))
 
     return (
         ItemResp(status=HttpStatus.OK)

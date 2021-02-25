@@ -3,9 +3,9 @@ from json import dumps, loads
 from core.response import HttpStatus, ItemResp, ItemsResp
 from pendulum import DateTime
 from sqlalchemy.exc import IntegrityError
-from todolist.entities import Board
-from todolist.models import SQLBoard
 from todolist.board.interfaces import IBoardRepo
+from todolist.entities import Board
+from todolist.models import SQLBoard, SQLBoardColumn
 
 
 class SQLBoardRepo(IBoardRepo):
@@ -54,6 +54,7 @@ class SQLBoardRepo(IBoardRepo):
             return ItemResp(status=HttpStatus.NOT_FOUND)
 
         try:
+            self.session.query(SQLBoardColumn).filter_by(board_id=id).delete()
             self.session.delete(db_board)
             self.session.commit()
         except IntegrityError:

@@ -20,6 +20,24 @@ class Board:
 
 
 @dataclass
+class BoardColumn:
+    id: int = None
+    board_id: int = None
+    name: str = None
+    created_at: DateTime = None
+    updated_at: DateTime = None
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "board_id": self.board_id,
+            "name": self.name,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }
+
+
+@dataclass
 class Ticket:
     id: int = None
     board_id: int = None
