@@ -1,6 +1,4 @@
-
 DROP TABLE IF EXISTS todolist_tickets;
-DROP TABLE IF EXISTS todolist_persons;
 DROP TABLE IF EXISTS todolist_board_columns;
 DROP TABLE IF EXISTS todolist_boards;
 
@@ -22,20 +20,9 @@ CREATE TABLE todolist_board_columns (
     CONSTRAINT fk_todolist_board_columsn_todolist_boards FOREIGN KEY (board_id) REFERENCES todolist_boards(id)
 );
 
-CREATE TABLE todolist_persons (
-    id SERIAL,
-    username VARCHAR(32) NOT NULL,
-    display_name VARCHAR(128) NOT NULL,
-    email VARCHAR(128) NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
-    CONSTRAINT pk_todolist_persons PRIMARY KEY (id)
-);
-
 CREATE TABLE todolist_tickets (
     id SERIAL,
     board_column_id INT DEFAULT NULL,
-    person_id INT DEFAULT NULL,
     title VARCHAR(128) NOT NULL,
     description TEXT DEFAULT NULL,
     priority INT DEFAULT 0,
@@ -43,6 +30,5 @@ CREATE TABLE todolist_tickets (
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
     CONSTRAINT pk_todolist_tickets PRIMARY KEY (id),
-    CONSTRAINT fk_todolist_tickets_todolist_board_columns FOREIGN KEY (board_column_id) REFERENCES todolist_board_columns(id),
-    CONSTRAINT fk_todolist_tickets_todolist_persons FOREIGN KEY (person_id) REFERENCES todolist_persons(id)
+    CONSTRAINT fk_todolist_tickets_todolist_board_columns FOREIGN KEY (board_column_id) REFERENCES todolist_board_columns(id)
 );
