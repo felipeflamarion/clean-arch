@@ -5,7 +5,6 @@ from todolist.board_column.requests import (
     CreateBoardColumn,
     DeleteBoardColumn,
     GetBoardColumn,
-    GetBoardColumnsByBoardId,
     UpdateBoardColumn,
 )
 from todolist.entities import BoardColumn
@@ -18,10 +17,6 @@ class IBoardColumnRepo(ABC):
 
     @abstractclassmethod
     def update_board_column(self, board_column: BoardColumn) -> ItemResp:
-        raise NotImplementedError
-
-    @abstractclassmethod
-    def get_board_columns_by_board_id(self, board_id: int) -> ItemsResp:
         raise NotImplementedError
 
     @abstractclassmethod
@@ -44,10 +39,6 @@ class IBoardColumnUseCases:
 
     @abstractclassmethod
     def get_board_column(self, req: GetBoardColumn) -> ItemResp:
-        raise NotImplementedError
-
-    @abstractclassmethod
-    def get_board_columns_by_board_id(self, req: GetBoardColumnsByBoardId) -> ItemsResp:
         raise NotImplementedError
 
     @abstractclassmethod

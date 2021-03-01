@@ -5,8 +5,9 @@ from core.response import ErrorType, FieldError
 
 def validate_name(name: str) -> FieldError:
     """
-    Field 'title':
+    Field 'name':
     - required
+    - string
     - min 3 characters
     - max 32 characters
     """
@@ -15,11 +16,16 @@ def validate_name(name: str) -> FieldError:
             field="name", type=ErrorType.REQUIRED, message="Name is required"
         )
 
+    if not isinstance(name, str):
+        return FieldError(
+            field="name", type=ErrorType.INVALID, message="Name must be a string"
+        )
+
     if not (3 <= len(name) <= 32):
         return FieldError(
             field="name",
             type=ErrorType.INVALID,
-            message="Name has a invalid length. Try between 3 and 128 characters ",
+            message="Name has a invalid length. Try between 3 and 128 characters",
         )
 
 

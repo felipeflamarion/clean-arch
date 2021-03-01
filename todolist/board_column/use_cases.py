@@ -8,7 +8,6 @@ from todolist.board_column.requests import (
     CreateBoardColumn,
     DeleteBoardColumn,
     GetBoardColumn,
-    GetBoardColumnsByBoardId,
     UpdateBoardColumn,
 )
 from todolist.entities import BoardColumn
@@ -69,19 +68,7 @@ class BoardColumnUseCases(IBoardColumnUseCases):
         return self.repo.update_board_column(board_column)
 
     def get_board_column(self, req: GetBoardColumn):
-        if bussiness.validate_board_existence(req.board_id, self.boards_uc):
-            return ItemResp(status=HttpStatus.NOT_FOUND)
-
         return self.repo.get_board_column_by_id(id=req.id)
 
-    def get_board_columns_by_board_id(self, req: GetBoardColumnsByBoardId):
-        if bussiness.validate_board_existence(req.board_id, self.boards_uc):
-            return ItemResp(status=HttpStatus.NOT_FOUND)
-
-        return self.repo.get_board_columns_by_board_id(board_id=req.board_id)
-
     def delete_board_column(self, req: DeleteBoardColumn):
-        if bussiness.validate_board_existence(req.board_id, self.boards_uc):
-            return ItemResp(status=HttpStatus.NOT_FOUND)
-
         return self.repo.delete_board_column(id=req.id)

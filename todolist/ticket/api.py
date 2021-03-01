@@ -23,9 +23,10 @@ class TicketListAPI(APIBase):
     def create(self, *args, **kwargs):
         resp = self.use_cases.create_ticket(
             CreateTicket(
-                board_id=request.json.get("board_id"),
+                board_column_id=request.json.get("board_column_id"),
                 title=request.json.get("title"),
                 description=request.json.get("description"),
+                priority=request.json.get("priority"),
                 labels=request.json.get("labels"),
             )
         )
@@ -52,6 +53,7 @@ class TicketSingleAPI(APIBase):
                 id=id,
                 title=request.json.get("title"),
                 description=request.json.get("description"),
+                priority=request.json.get("priority"),
                 labels=request.json.get("labels"),
             )
         )

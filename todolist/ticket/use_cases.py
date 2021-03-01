@@ -1,36 +1,46 @@
 import pendulum as datetime
 from core.response import HttpStatus, ItemResp
 from core.validations import handle_validations
-from todolist.board.interfaces import IBoardUseCases
+from todolist.board_column.interfaces import IBoardColumnUseCases
 from todolist.entities import Ticket
-from todolist.ticket import bussiness
+from todolist.ticket import bussiness, validations
 from todolist.ticket.interfaces import ITicketRepo, ITicketUseCases
 from todolist.ticket.requests import CreateTicket, DeleteTicket, GetTicket, UpdateTicket
 
 
 class TicketUseCases(ITicketUseCases):
-    def __init__(self, repo: ITicketRepo, boards_uc: IBoardUseCases):
+    def __init__(self, repo: ITicketRepo, board_columns_uc: IBoardColumnUseCases):
         self.repo = repo
-        self.boards_uc = boards_uc
+        self.board_columns_uc = board_columns_uc
 
     def create_ticket(self, req: CreateTicket):
         resp = handle_validations(
-            [
-                bussiness.validate_board_id(req.board_id, self.boards_uc),
-                bussiness.validate_title(req.title),
-                bussiness.validate_description(req.description),
-                bussiness.validate_labels(req.labels),
-            ]
+            fields_validations=[
+                validations.validate_board_column_id(req.board_column_id),
+                validations.validate_title(req.title),
+                validations.validate_description(req.description),
+                validations.validate_priority(req.priority),
+                validations.validate_labels(req.labels),
+            ],
+            bussiness_validations=[
+                bussiness.validate_board_column_id(
+                    req.board_column_id, self.board_columns_uc
+                )
+            ],
         )
         if not resp.is_ok:
             return resp
 
+        created_at = datetime.now()
+
         ticket = Ticket(
-            board_id=req.board_id,
+            board_column_id=req.board_column_id,
             title=req.title,
             description=req.description,
-            labels=req.labels,
-            creation_date=datetime.now(),
+            priority=req.priority,
+            labels=req.labels if req.labels is not None else [],
+            created_at=created_at,
+            updated_at=created_at,
         )
         return self.repo.insert_ticket(ticket)
 
@@ -41,21 +51,27 @@ class TicketUseCases(ITicketUseCases):
         ticket = resp.item
 
         resp = handle_validations(
-            [
-                bussiness.validate_title(req.title),
-                bussiness.validate_description(req.description),
-                bussiness.validate_labels(req.labels),
-            ]
+            fields_validations=[
+                validations.validate_title(req.title),
+                validations.validate_description(req.description),
+                validations.validate_priority(req.priority),
+                validations.validate_labels(req.labels),
+            ],
         )
         if not resp.is_ok:
             return resp
 
+        updated_at = datetime.now()
+
         ticket = Ticket(
             id=req.id,
+            board_column_id=ticket.board_column_id,
             title=req.title,
             description=req.description,
-            labels=req.labels,
-            creation_date=ticket.creation_date,
+            priority=req.priority,
+            labels=req.labels if req.labels is not None else [],
+            created_at=ticket.created_at,
+            updated_at=updated_at,
         )
         return self.repo.update_ticket(ticket)
 

@@ -17,15 +17,8 @@ class UpdateBoardColumn:
 @dataclass
 class GetBoardColumn:
     id: int
-    board_id: int
 
 
 @dataclass
 class DeleteBoardColumn:
     id: int
-    board_id: int
-
-
-@dataclass
-class GetBoardColumnsByBoardId:
-    board_id: int

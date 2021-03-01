@@ -40,17 +40,6 @@ class SQLBoardColumnRepo(IBoardColumnRepo):
 
         return ItemResp(item=board_column)
 
-    def get_board_columns_by_board_id(self, board_id: int) -> ItemsResp:
-        db_board_columns = self.session.query(SQLBoardColumn).filter_by(
-            board_id=board_id
-        )
-        return ItemsResp(
-            items=[
-                db_to_board_column(db_board_column)
-                for db_board_column in db_board_columns
-            ]
-        )
-
     def get_board_column_by_id(self, id: int) -> ItemResp:
         db_board_column = self.session.query(SQLBoardColumn).get(id)
         if not db_board_column:

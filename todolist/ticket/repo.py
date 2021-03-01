@@ -32,7 +32,9 @@ class SQLTicketRepo(ITicketRepo):
                 {
                     "title": db_ticket.title,
                     "description": db_ticket.description,
+                    "priority": db_ticket.priority,
                     "labels": db_ticket.labels,
+                    "updated_at": db_ticket.updated_at,
                 }
             )
             self.session.commit()
@@ -69,20 +71,24 @@ class SQLTicketRepo(ITicketRepo):
 def ticket_to_db(ticket: Ticket) -> SQLTicket:
     return SQLTicket(
         id=ticket.id,
-        board_id=ticket.board_id,
+        board_column_id=ticket.board_column_id,
         title=ticket.title,
         description=ticket.description,
+        priority=ticket.priority,
         labels=dumps(ticket.labels),
-        creation_date=ticket.creation_date,
+        created_at=ticket.created_at,
+        updated_at=ticket.updated_at,
     )
 
 
 def db_to_ticket(sql_ticket: SQLTicket) -> Ticket:
     return Ticket(
         id=sql_ticket.id,
-        board_id=sql_ticket.board_id,
+        board_column_id=sql_ticket.board_column_id,
         title=sql_ticket.title,
         description=sql_ticket.description,
+        priority=sql_ticket.priority,
         labels=loads(sql_ticket.labels) if sql_ticket.labels else [],
-        creation_date=sql_ticket.creation_date,
+        created_at=sql_ticket.created_at,
+        updated_at=sql_ticket.updated_at,
     )
