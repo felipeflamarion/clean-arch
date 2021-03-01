@@ -7,12 +7,18 @@ def validate_title(title: str) -> FieldError:
     """
     Field 'title':
     - required
+    - string
     - min 3 characters
     - max 128 characters
     """
     if title is None:
         return FieldError(
             field="title", type=ErrorType.REQUIRED, message="Title is required"
+        )
+
+    if not isinstance(title, int):
+        return FieldError(
+            field="title", type=ErrorType.INVALID, message="Title must be a string"
         )
 
     if not (3 <= len(title) <= 128):
